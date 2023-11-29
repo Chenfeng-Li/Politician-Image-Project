@@ -6,6 +6,7 @@ Then pass each image to Facenet detection and recognition model, to get the embe
 import torch
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from PIL import ImageFile
+from tqdm import tqdm
 
 from tools import img_from_url
 

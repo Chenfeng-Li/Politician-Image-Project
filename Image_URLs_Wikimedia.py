@@ -101,7 +101,7 @@ def person_img_media(url, name=None, original_image=False, depth=0):
 
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     # Urls of page of "subcategory"
     urls_media = [] 
     # Urls of person pages.
