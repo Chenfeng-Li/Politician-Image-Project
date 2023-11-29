@@ -24,7 +24,7 @@ where
 1. Prepare another labelled dataset:
    Extract names and relevant image urls of politicians from the two Wikimedia sites:
    <ul>
-     <li><a href="[Category:21st-century male politicians of the United States](https://commons.wikimedia.org/wiki/Category:21st-century_male_politicians_of_the_United_States)https://commons.wikimedia.org/wiki/Category:21st-century_male_politicians_of_the_United_States">Category:21st-century male politicians of the United States</a></li>
+     <li><a href="https://commons.wikimedia.org/wiki/Category:21st-century_male_politicians_of_the_United_States">Category:21st-century male politicians of the United States</a></li>
      <li><a href="https://commons.wikimedia.org/wiki/Category:21st-century_female_politicians_of_the_United_States">Category:21st-century female politicians of the United States</a></li>
    </ul>
 ```
