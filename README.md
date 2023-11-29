@@ -30,14 +30,14 @@ where
 ```
 $ python Image_URLs_Wikimedia.py
 ```
-This execution takes around 24 hours, producing a map "name -> list of image urls" and storing as <code>name_img_media.pt</code> (around 32 MB).
+This execution takes around 24 hours, producing a map "name -> list of image urls" and storing as <code>name_img_media.pt</code> (around 32 MB).<br>
 You may also download this file from https://drive.google.com/file/d/1jTEG2ckG4MUfbpYp4NZLCGyoK5EnPvHS/view?usp=share_link
 
 2. For the images from <code>name_img_media.pt</code>, implementing the <code>facenet</code> functions to get embedding vectors of faces.
 ```
 $ python Embedding_Faces.py
 ```
-This execution takes around 36 hours, storing the labelled vectors as <code>name_embd.pt</code>.
+This execution takes around 36 hours, storing the labelled vectors as <code>name_embd.pt</code> (around 3.2 GB).<br>
 You may also download this file from https://drive.google.com/file/d/1MQiAbFaqVBLmQ6Z7yMtLj950II4kbqmz/view?usp=share_link
 
 3. Using K-nearest neighbour classifier to produce a model for the labelled vectors.
