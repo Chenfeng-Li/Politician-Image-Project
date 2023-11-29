@@ -10,8 +10,9 @@ https://drive.google.com/file/d/1QWZ5JAdihzDzdTQX2Xjk4rFNm_ixurz7/view?usp=drive
 <li>
   Install Packages
 ```
-  pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn tqdm
+pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn tqdm
 ```
+  
 where 
   <ul>
   <li><code>facenet_pytorch</code> ([source](https://github.com/timesler/facenet-pytorch)): Key module for facial detection and recognition. </li>
