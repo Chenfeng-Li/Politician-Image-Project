@@ -5,10 +5,8 @@ Build up models to recognize the politicians in images from news websites
 https://drive.google.com/file/d/1QWZ5JAdihzDzdTQX2Xjk4rFNm_ixurz7/view?usp=drive_link
 
 ## Model preparation
-<ol>
 
-<li>
-  Install Packages
+### Install Packages
 ```
 pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn tqdm
 ```
@@ -20,7 +18,7 @@ where
   <li><code>Pillow</code>: Python image library.</li>
   <li><code>scikit-learn</code>: Import K Nearest Neighbour classifier.</li>
   </ul>
-</li>
+
 
 
   
