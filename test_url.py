@@ -43,7 +43,7 @@ if __name__ == "__main__":
     if not ns:
         print("No politicians in the image.")
     else:
-        print(f"Recognize {ns} in the images.")
+        print(f"Recognized {ns} in the image.")
     
     img = img_from_url(url)
     plt.imshow(img)
