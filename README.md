@@ -88,7 +88,7 @@ To reduce the execution time, for each person, we take at most 10 faces embeddin
 $ python Embedding_Faces.py
 ```
 This execution takes around 9 hours, storing the labelled vectors as <code>name_embd.pt</code> (around 1.3 GB), which includes 37934 embedding face vectors from 9308 politicians.<br>
-You may also download this file from https://drive.google.com/file/d/1MQiAbFaqVBLmQ6Z7yMtLj950II4kbqmz/view?usp=share_link
+You may also download this file from https://drive.google.com/file/d/1SLuR20JKkM4EgpwZWJkGkSI3LXy0eBkc/view?usp=share_link
 
 3. Using K-nearest neighbour classifier (with K=1) to produce a model for the labelled vectors.
 ```
@@ -106,6 +106,7 @@ Output:
 ```
 >>> The prediction accuracy of name_embd dataset through 1-nearest-neighbor is 0.8059839198629234.
 ```
+
 
 2. Test the model using a single url:
 
@@ -147,5 +148,11 @@ Output:
 Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven Mnuchin'} in the image.
 ```
 
+## Combind with Facial Expression Recognition model.
+
+### Source:
+<a href="https://github.com/WuJie1010/Facial-Expression-Recognition.Pytorch">Facial-Expression-Recognition.Pytorch</a> from <a href="https://github.com/WuJie1010">WuJie</a>.
+
+Achieving 73% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
 
 
