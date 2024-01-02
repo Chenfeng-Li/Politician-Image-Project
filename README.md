@@ -30,25 +30,27 @@ Determine the source corporation of each row by analyzing the URLs. Remove the r
 
 After processing, the sample size of dataset is **952705**, where the number of samples from each corporation is:
 
-| Politico       | 315248 |
-| DailyCaller    | 145037 |
-| WashTimes      | 114970 |
-| FoxNews        | 101162 |
-| CNN            | 94209  |
-| NPR            | 92599  |
-| Breitbart      | 81336  |
-| APNews         | 7715   |
-| PoliticoPro    | 236    |
-| FoxBusiness    | 148    |
-| TheHill        | 21     |
-| WP             | 13     |
-| TimesOfIsrael  | 3      |
-| Mediaite       | 2      |
-| WashingtonTimes| 2      |
-| WSJ            | 1      |
-| JNS            | 1      |
-| JPost          | 1      |
-| AFP            | 1      |
+| Corporation     | Sample Size |
+|-----------------|-------------|
+| Politico        | 315248      |
+| DailyCaller     | 145037      |
+| WashTimes       | 114970      |
+| FoxNews         | 101162      |
+| CNN             | 94209       |
+| NPR             | 92599       |
+| Breitbart       | 81336       |
+| APNews          | 7715        |
+| PoliticoPro     | 236         |
+| FoxBusiness     | 148         |
+| TheHill         | 21          |
+| WP              | 13          |
+| TimesOfIsrael   | 3           |
+| Mediaite        | 2           |
+| WashingtonTimes | 2           |
+| WSJ             | 1           |
+| JNS             | 1           |
+| JPost           | 1           |
+| AFP             | 1           |
 
 
 
