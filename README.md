@@ -153,6 +153,6 @@ Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven
 ### Source:
 <a href="https://github.com/WuJie1010/Facial-Expression-Recognition.Pytorch">Facial-Expression-Recognition.Pytorch</a> from <a href="https://github.com/WuJie1010">WuJie</a>.
 
-Achieving 73% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
+Implementing VGG network, achieving 73% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
 
 
