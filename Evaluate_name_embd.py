@@ -10,8 +10,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
 name_embd = torch.load("name_embd.pt")
-X = name_embd['Embd_faces']
-y = name_embd['target']
+X = name_embd['embd_faces']
+y = name_embd['targets']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8)
 

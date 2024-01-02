@@ -3,7 +3,6 @@ import pickle
 import torch
 import matplotlib.pyplot as plt
 from facenet_pytorch import MTCNN, InceptionResnetV1
-from torchvision.transforms import ToPILImage
 
 from tools import img_from_url
 
@@ -15,6 +14,7 @@ resnet.classify = True
 
 name_embd = torch.load('name_embd.pt')
 names = name_embd['names']
+targets = name_embd['targets']
 
 def name_from_url(url):
     """
@@ -25,35 +25,35 @@ def name_from_url(url):
         img = img.convert('RGB')
         faces = mtcnn(img)
     except:
-        sys.exit("Invalid URL")
+        return "Invalid URL"
+    
+    if not faces:
+        return set()
     
     ns = []
     for face in faces:
         face_embd = resnet(face.unsqueeze(0))
         face_embd = face_embd.detach()
-        target = model.predict(face_embd)[0]
 
-        ns.append(names[target])
+        dist, idx = model.kneighbors(face_embd, n_neighbors=1)
+        if dist < 200:
+            target = targets[idx][0]
+            ns.append(names[target])
     return set(ns)
 
 if __name__ == "__main__":
-    print("Input an image url:")
-    url = input()
-    ns = name_from_url(url)
-    if not ns:
-        print("No politicians in the image.")
-    else:
-        print(f"Recognized {ns} in the image.")
-    
-    img = img_from_url(url)
-    plt.imshow(img)
+    print('Enter to exit the program.')
+    while True:
+        print("Input an image url:")
+        url = input()
+        if url == "":
+            break
 
+        ns = name_from_url(url)
 
-
-
-
-
-
-
-
-
+        if not ns:
+            print("No politicians in the image.")
+        elif ns == "Invalid URL":
+            print(ns)
+        else:
+            print(f"Recognized {ns} in the image.")

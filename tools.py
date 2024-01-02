@@ -1,6 +1,7 @@
 import requests
 from io import BytesIO
-from PIL import Image 
+from bs4 import BeautifulSoup
+from PIL import Image
 
 def img_from_url(url):
     """
