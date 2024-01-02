@@ -1,14 +1,9 @@
 # Politician Image Project
 Build up models to recognize the politicians in images from news websites
 
-## Dataset
-https://drive.google.com/file/d/1QWZ5JAdihzDzdTQX2Xjk4rFNm_ixurz7/view?usp=drive_link
-
-## Model preparation
-
 ### Install Packages
 ```
-pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn pickle-mixin tqdm
+pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn pickle-mixin tqdm nltk
 ```
   
 where 
@@ -18,7 +13,49 @@ where
   <li><code>Pillow</code>: Python image library.</li>
   <li><code>scikit-learn</code>: Import K Nearest Neighbour classifier.</li>
   <li><code>pickle-mixin</code>: Save sklearn model.</li>
+  <li><code>nltk</code>: Splits English sentence to words.</li>
   </ul>
+
+
+
+## Dataset
+https://drive.google.com/file/d/1QWZ5JAdihzDzdTQX2Xjk4rFNm_ixurz7/view?usp=drive_link
+
+## Analyze and processing the dataset
+```
+$ python analyze_image_dataset.py
+```
+Rename the columns. Delete lines with no URLs, invalid URLs, or duplicates.<br>
+Determine the source corporation of each row by analyzing the URLs. Remove the rows from invalid or non-media corporation.
+
+After processing, the sample size of dataset is **952705**, where the number of samples from each corporation is:
+
+| Politico       | 315248 |
+| DailyCaller    | 145037 |
+| WashTimes      | 114970 |
+| FoxNews        | 101162 |
+| CNN            | 94209  |
+| NPR            | 92599  |
+| Breitbart      | 81336  |
+| APNews         | 7715   |
+| PoliticoPro    | 236    |
+| FoxBusiness    | 148    |
+| TheHill        | 21     |
+| WP             | 13     |
+| TimesOfIsrael  | 3      |
+| Mediaite       | 2      |
+| WashingtonTimes| 2      |
+| WSJ            | 1      |
+| JNS            | 1      |
+| JPost          | 1      |
+| AFP            | 1      |
+
+
+
+
+## Model preparation
+
+
 
 ### Steps
 1. Prepare another labelled dataset:<br>
