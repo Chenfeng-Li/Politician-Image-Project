@@ -55,21 +55,33 @@ After processing, the sample size of dataset is **952705**, where the number of 
 
 
 
-## Model preparation
+## Facenet Model preparation
 
 
 
 ### Steps
 1. Prepare another labelled dataset:<br>
-   Extract names and relevant image urls of politicians from the two Wikimedia sites:
+   Extract names and relevant image urls of politicians from the three Wikimedia sites:
    <ul>
      <li><a href="https://commons.wikimedia.org/wiki/Category:21st-century_male_politicians_of_the_United_States">Category:21st-century male politicians of the United States</a></li>
      <li><a href="https://commons.wikimedia.org/wiki/Category:21st-century_female_politicians_of_the_United_States">Category:21st-century female politicians of the United States</a></li>
+     <li><a href="https://commons.wikimedia.org/w/index.php?title=Category:21st-century_businesspeople_from_the_United_States&oldid=527515279
+">Category: 21st-century businesspeople from the United States</a></li>
    </ul>
+
+   and two Wikiopedia sites:
+   <ul>
+     <li><a href="https://en.wikipedia.org/w/index.php?title=Category:21st-century_American_politicians&oldid=1015022478">Category:21st-century American politicians</a></li>
+     <li><a href="https://en.wikipedia.org/w/index.php?title=Category:21st-century_American_businesspeople&oldid=1110690935">Category:21st-century American businesspeople</a></li>     
+   </ul>
+
+Specifically, for each personal page from Wikipedia, first check if this person has wikimedia page, and get images from wikimedia page if possible. Otherwise, take the portrait link from the Wikipedia page if there is.
+
 ```
-$ python Image_URLs_Wikimedia.py
+$ python Image_URLs.py
 ```
-This execution takes around 24 hours, producing a map "name -> list of image urls" and storing as <code>name_img_media.pt</code> (around 32 MB), which includes 165546 urls from 2265 politicians.<br>
+
+This execution takes around 48 hours, producing a map "name -> list of image urls" and storing as <code>name_img_url.pt</code> (around 61 MB), which includes 312587 urls from 20707 (in particular, 10094 non-empty) persons.<br>
 You may also download this file from https://drive.google.com/file/d/1jTEG2ckG4MUfbpYp4NZLCGyoK5EnPvHS/view?usp=share_link
 
 2. For the images from <code>name_img_media.pt</code>, implementing the <code>facenet</code> functions to get embedding vectors of faces.
