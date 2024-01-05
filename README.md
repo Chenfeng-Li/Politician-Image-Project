@@ -3,15 +3,15 @@ Build up models to recognize the politicians in images from news websites
 
 ### Install Packages
 ```
-pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch torchvision scikit-learn pickle-mixin tqdm nltk
+pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch rmn torchvision scikit-learn pickle-mixin tqdm nltk
 ```
   
 where 
   <ul>
   <li><code>facenet_pytorch</code> (<a href="https://github.com/timesler/facenet-pytorch">source</a>)): Key module for facial detection and recognition. </li>
+  <li><code>rmn</code> (<a href="https://github.com/phamquiluan/ResidualMaskingNetwork">source</a>)): Key module for facial expression detection. </li>
   <li><code>request beautifulsoup4</code>: Extract content (links, texts, images) from website. </li>
-  <li><code>Pillow</code>: Python image library.</li>
-  <li><code>scikit-learn</code>: Import K Nearest Neighbour classifier.</li>
+  <li><code>scikit-learn</code>: K Nearest Neighbour classifier.</li>
   <li><code>pickle-mixin</code>: Save sklearn model.</li>
   <li><code>nltk</code>: Splits English sentence to words.</li>
   </ul>
@@ -148,11 +148,14 @@ Output:
 Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven Mnuchin'} in the image.
 ```
 
-## Combind with Facial Expression Recognition model.
+## Facial Expression Recognition (FER) model
 
 ### Source:
-<a href="https://github.com/WuJie1010/Facial-Expression-Recognition.Pytorch">Facial-Expression-Recognition.Pytorch</a> from <a href="https://github.com/WuJie1010">WuJie</a>.
+<a href="https://github.com/phamquiluan/ResidualMaskingNetwork">Residual Masking Network</a> from <a href="https://github.com/phamquiluan">Luan Pham</a>.
 
-Implementing VGG network, achieving 73% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
+Implementing Residual Masking Network (RMN) for expression detection. Achieving 77% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
+
+
+
 
 
