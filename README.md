@@ -153,8 +153,22 @@ Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven
 ### Source:
 <a href="https://github.com/phamquiluan/ResidualMaskingNetwork">Residual Masking Network</a> from <a href="https://github.com/phamquiluan">Luan Pham</a>.
 
+
 Implementing Residual Masking Network (RMN) for expression detection. Achieving 77% accuracy from <a href="https://www.kaggle.com/datasets/msambare/fer2013">Fer2013</a> dataset.
 
+For a face image, this model returns a logit vector of length 7, stands for <code>['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']<code> expressions. We can then apply softmax function to get the corresponding probability.
+
+
+
+## Obtained identity and expression data from the Media Dataset with prompts.
+```
+$ python name_emotion.py
+```
+Enter the exact name of a person we are interesting in (e.g. "Donald Trump"), the prompts (e.g. "Trump"), and the maximum number of values to get for each media corporationing.
+
+This program filter out the samples whose texts (Title, Caption or Text) don't contain these prompts. 
+
+Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["washtimes", "washingtontimes"], ["dailycaller"],["politico", "politicopro"], ["breitbart"], ["npr"], ['apnews']]</code>, with the facial recognition model <code>model.sav</code>, for each sample, the program determines whether or not the person is in the photos. If so, passing the square-cropped face to the emotion model, and get the logit vector. Store the result in <code>politician_emotions_corporation.pt</code>.
 
 
 
