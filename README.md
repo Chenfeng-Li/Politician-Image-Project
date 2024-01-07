@@ -1,9 +1,11 @@
 # Politician Image Project
-Build up models to recognize the politicians in images from news websites
+Build up models to recognize the politicians in images from news websites.
+
+<img scc="assets/explanation.jpg>
 
 ### Install Packages
 ```
-pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch rmn torchvision scikit-learn pickle-mixin tqdm nltk
+pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch rmn torchvision scikit-learn pickle-mixin tqdm
 ```
   
 where 
@@ -13,7 +15,6 @@ where
   <li><code>request beautifulsoup4</code>: Extract content (links, texts, images) from website. </li>
   <li><code>scikit-learn</code>: K Nearest Neighbour classifier.</li>
   <li><code>pickle-mixin</code>: Save sklearn model.</li>
-  <li><code>nltk</code>: Splits English sentence to words.</li>
   </ul>
 
 
@@ -147,6 +148,7 @@ Output:
 ```
 Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven Mnuchin'} in the image.
 ```
+Notice that 'Donald Trump', 'Mike Pence', 'Steven Mnuchin' are correctly predicted, while the other two failed, as they are not included in the dataset.
 
 ## Facial Expression Recognition (FER) model
 
