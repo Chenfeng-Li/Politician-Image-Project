@@ -27,7 +27,7 @@ def name_from_url(url):
     except:
         return "Invalid URL"
     
-    if not faces:
+    if faces is None:
         return set()
     
     ns = []

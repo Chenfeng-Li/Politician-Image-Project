@@ -1,5 +1,4 @@
 import numpy as np
-import nltk
 import pandas as pd
 from PIL import Image
 import os
@@ -12,20 +11,19 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 from tqdm import tqdm
 from tools import img_from_url
 
-import Expression_Recognition.transforms as transforms
-from skimage import io
-from skimage.transform import resize
-from Expression_Recognition.models import *
+import cv2
+from torchvision.transforms import transforms
+from rmn import ensure_color, get_emo_model, ensure_gray
 
 
 
-def name_cor_filter(row, names, cors):
+def name_cor_filter(row, prompts, cors):
     """
     For a row of the dataframe, check if it comes from certain corporations, 
     and if some certain strings (names) is included in the text.
 
     rows: row of image dataset.
-    names (list): list of target strings.
+    prompts (list): list of target strings (possibly part of name).
     cors (list): list of the target corporations.
 
     Application example: find the rows of FoxNews contains "Trump"
@@ -33,20 +31,19 @@ def name_cor_filter(row, names, cors):
     """
 
 
-    
     for cor in cors:
         if row["Corporation"] == cor:
            
-            # If no name given, go through every images in this corporation.
-            if names == []:
+            # If no prompt given, go through every images in this corporation.
+            if prompts == []:
                 return True
 
-            for name in names:
-                if type(row['Title']) == str and name in nltk.word_tokenize(row['Title']):
+            for prompt in prompts:
+                if type(row['Title']) == str and prompt in row['Title']:
                     return True
-                if type(row['Caption']) == str and name in nltk.word_tokenize(row['Caption']):
+                if type(row['Caption']) == str and prompt in row['Caption']:
                     return True
-                if type(row['Text']) == str and name in nltk.word_tokenize(row['Text']):
+                if type(row['Text']) == str and prompt in row['Text']:
                     return True
     return False
 
@@ -67,9 +64,9 @@ resnet_vggface2.classify = True
 name_embd = torch.load('name_embd.pt')
 names = name_embd['names']
 
-def name_from_url(img, name):
+def name_from_img(img, name):
     """
-    Input an image url and a certain name.
+    Input an image and a certain name.
     If the image contains this name, return the crops. Otherwise, return False.
 
     img (PIL)
@@ -146,50 +143,36 @@ def extend_to_square(rect, limits):
 
 
 ### Load the facial expression recognition model
-cut_size = 44
-transform_test = transforms.Compose([
-    transforms.TenCrop(cut_size),
-    transforms.Lambda(lambda crops: torch.stack([transforms.ToTensor()(crop) for crop in crops])),
-])
-class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-net = VGG('VGG19')
-checkpoint = torch.load('Expression_Recognition/model.t7', map_location=torch.device('cpu'))
-net.load_state_dict(checkpoint['net'])
-net.eval()
+is_cuda = torch.cuda.is_available()
+image_size = (224, 224)
+transform = transforms.Compose(
+    transforms=[transforms.ToPILImage(), transforms.ToTensor()]
+)
+emo_model = get_emo_model()
 
 
-
-def rgb2gray(rgb):
-    """ For RGB array, convert to gray scale. """
-    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
 
 def emotion_embd(img, crop):
     """
-    Imput a PIL image and a crop (probably the crop of face), pass the image crop to FER model
-    return the emotion vectors.
-
-    img (PIL): an image (with face)
-    crop (length-4 array): crop coordinate of image (left, top, right, bottom).
-    
-    Return: 
-    output_avg (length-7 array): vector (logit) stands for emotion of face 
+    Given an image and coordindate of crop of face,
+    Return the emotion vector
     """
-    img = img.crop(crop)
-    img = np.array(img)
-    gray = rgb2gray(img)
-    gray = resize(gray, (48,48), mode='symmetric').astype(np.uint8)
-    img = gray[:, :, np.newaxis]
-    img = np.concatenate((img, img, img), axis=2)
-    img = Image.fromarray(img)
-    inputs = transform_test(img)
-    ncrops, c, h, w = np.shape(inputs)
+    face_image = img.crop(crop)
+    face_image = np.array(face_image)
+    face_image = face_image[:, :, ::-1]
+    face_image = ensure_gray(face_image)
 
-    inputs = inputs.view(-1, c, h, w)
+    face_image = ensure_color(face_image)
+    face_image = cv2.resize(face_image, image_size)
+    face_image = transform(face_image)
+
+    if is_cuda:
+        face_image = face_image.cuda(0)
     with torch.no_grad():
-        outputs = net(inputs)
+        face_image = torch.unsqueeze(face_image, dim=0)
+        output = torch.squeeze(emo_model(face_image), 0)
 
-    outputs_avg = outputs.view(ncrops, -1).mean(0)  # avg over crops
-    return outputs_avg
+    return output
 
 
 
@@ -213,7 +196,10 @@ def name_emotion(name, mask, max_num=None):
                 break
             try:
                 img = img_from_url(row["URL"])
-                crop = name_from_url(img, name=name)
+                if img.mode == "P":
+                    img = img.convert("RGBA")
+                img = img.convert("RGB")
+                crop = name_from_img(img, name=name)
                 if crop is not False:
                     crop = extend_to_square(crop, extend_limit(img))
                     emotions.append(emotion_embd(img, crop))
@@ -234,7 +220,10 @@ def name_emotion(name, mask, max_num=None):
 
                 try:
                     img = img_from_url(row["URL"])
-                    crop = name_from_url(img, name=name)
+                    if img.mode == "P":
+                        img = img.convert("RGBA")
+                    img = img.convert("RGB")
+                    crop = name_from_img(img, name=name)
                     if crop is not False:
                         crop = extend_to_square(crop, extend_limit(img))
                         emotions.append(emotion_embd(img, crop))
@@ -261,6 +250,7 @@ if __name__ == "__main__":
     df = df.sample(frac=1)
 
     try:
+        
         politician_emotion = torch.load("politician_emotions_corporation.pt")
     except:
         politician_emotion = {}
@@ -288,15 +278,15 @@ if __name__ == "__main__":
                 break
         exact_names.append(n)
     
-    print("\nInput the texts to filter.")
+    print("\nInput prompts to filter.")
     print("Press Enter to continue.")
     print("If input nothing, go through every images.")
-    name_texts = []
+    prompts = []
     while True:
         nt = input()
         if nt == "":
             break
-        name_texts.append(nt)
+        prompts.append(nt)
 
     print("\nInput the maximum number of emotions to get for each corporation. 2000 by default.")
     max_num = input()
@@ -305,15 +295,26 @@ if __name__ == "__main__":
     else:
         max_num = int(max_num)
 
-    
-    politician_emotion[exact_names[0]] = {}
+    try:
+        politician_emotion[exact_names[0]]
+    except:
+        politician_emotion[exact_names[0]] = {}
 
     for cor in corporations:
         print(f"Now analyzing {cor}")
-        name_cor_mask = df.apply(name_cor_filter, axis=1, args=(name_texts, cor))
-        emotions_list, URLs = name_emotion(exact_names, name_cor_mask, max_num=max_num)
-        emotions = torch.stack(emotions_list)
-        politician_emotion[exact_names[0]][cor[0]] = (emotions, URLs)
-        torch.save(politician_emotion, "politician_emotions_corporation.pt")
+        try:
+            politician_emotion[exact_names[0]][cor[0]]
+            print(f"{cor} already analyzed, {len(politician_emotion[exact_names[0]][1])} samples in total.")
+        except:
+            name_cor_mask = df.apply(name_cor_filter, axis=1, args=(prompts, cor))
+            emotions_list, URLs = name_emotion(exact_names, name_cor_mask, max_num=max_num)
+            try:
+                emotions = torch.stack(emotions_list)
+            except:
+                # emotions_list is empty
+                emotions = torch.empty((0,7))
+            politician_emotion[exact_names[0]][cor[0]] = (emotions, URLs)
+            print(f"{len(URLs)} samples in total.")
+            torch.save(politician_emotion, "politician_emotions_corporation.pt")
     
 

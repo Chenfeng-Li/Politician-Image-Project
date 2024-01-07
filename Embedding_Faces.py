@@ -38,7 +38,9 @@ def embedding_face(name, max_num=torch.inf):
     for label, url in enumerate(urls):
         try:
             img = img_from_url(url)       
-            img = img.convert('RGB')
+            if img.mode == "P":
+                img = img.convert("RGBA")
+            img = img.convert("RGB")
             boxes, batch_probs, batch_points = mtcnn.detect(img, landmarks=True)
             faces = mtcnn.extract(img, boxes,save_path=None)
         except:
@@ -69,7 +71,9 @@ def embedding_face(name, max_num=torch.inf):
 
         try:
             img = img_from_url(url)
-            img = img.convert('RGB')
+            if img.mode == "P":
+                img = img.convert("RGBA")
+            img = img.convert("RGB")
             boxes, batch_probs, batch_points = mtcnn.detect(img, landmarks=True)
             faces = mtcnn.extract(img, boxes,save_path=None)
         except:
