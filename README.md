@@ -179,10 +179,7 @@ For a face image, let $F$ be the actual name of this face, $P$ be the predicted 
 We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.\n
 
 According to the Bayesian Theorem:
-\begin{align}
-P(F = n | P = n) &= P(F = n | P = n, D_n=1)\\
-&= \frac{P(P = n | F = n, D_n=1)  P(F = n｜D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)} 
-\end{align}
+\[ P(F = n | P = n) = P(F = n | P = n, D_n=1) = \frac{P(P = n | F = n, D_n=1)  P(F = n｜D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)} \]
 
 where
 <ul>
@@ -191,11 +188,11 @@ where
 <li>$P(F = n|D_n=1)$: The frequency of that name $n$ appearing in the image dataset.</li>  
 </ul>
 Here are some pairs:
-| $P(F = n|D_n=1)$ | $P(P = n | F = n, D_n=1)$ | 
-|------------------------|----------------------------------| 
-| 0.01                   | 0.989                            |
-| 0.001                  | 0.904                            |
-| 0.0001                 | 0.485                            |
+| $P(F = n|D_n=1)$ | $P(P = n | F = n)$ | 
+|------------------|--------------------| 
+| 0.01             | 0.989              |
+| 0.001            | 0.904              |
+| 0.0001           | 0.485              |
 
 
 
