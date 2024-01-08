@@ -175,23 +175,23 @@ Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["w
 ### Theoretical Accuracy of identity recognition through KNN model:
 #### Case 1: Without usage of prompt:
 
-For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $D_n \in {0,1}$ stands for whether or not the name is included in the model. 
+For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $D_n \in \{0,1\} $ stands for whether or not the name is included in the model. 
 We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.\n
 
 According to the Bayesian Theorem:
 \begin{align}
-\text{P}(F = n | P = n) &= \text{P}(F = n | P = n, D_n=1)\\
-&= \frac{\text{P}(P = n | F = n, D_n=1)  \text{P}(F = n｜D_n=1)}{\text{P}(P = n | F = n, D_n=1)  \text{P}(F = n|D_n=1) + \text{P}(P = n | F \neq n, D_n=1) \text{P}(F \neq n|D_n=1)} 
+P(F = n | P = n) &= P(F = n | P = n, D_n=1)\\
+&= \frac{P(P = n | F = n, D_n=1)  P(F = n｜D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)} 
 \end{align}
 
 where
 <ul>
-<li>$\text{P}(P = n | F = n, D_n=1)$: The prediction accuracy of the model. Estimated 0.95.  </li>
-<li>$\text{P}(P = n | F \neq n, D_n=1)$: Probability that the actual name is not $n$, but predict $n$. Use the $\frac{1}{9905}$probability of arbitrary choice as estimation. </li>
-<li>$\text{P}(F = n|D_n=1)$: The frequency of that name $n$ appearing in the image dataset.</li>  
+<li>$P(P = n | F = n, D_n=1)$: The prediction accuracy of the model. Estimated 0.95.  </li>
+<li>$P(P = n | F \neq n, D_n=1)$: Probability that the actual name is not $n$, but predict $n$. Use the $\frac{1}{9905}$probability of arbitrary choice as estimation. </li>
+<li>$P(F = n|D_n=1)$: The frequency of that name $n$ appearing in the image dataset.</li>  
 </ul>
 Here are some pairs:
-| $\text{P}(F = n|D_n=1)$ | $\text{P}(P = n | F = n, D_n=1)$ | 
+| $P(F = n|D_n=1)$ | $P(P = n | F = n, D_n=1)$ | 
 |------------------------|----------------------------------| 
 | 0.01                   | 0.989                            |
 | 0.001                  | 0.904                            |
