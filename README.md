@@ -174,7 +174,7 @@ Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["w
 
 
 ## Result
-<div style="width: 100%; height: 30%; overflow: auto;">
+<div style="width: 100%; height: 30%; overflow: scroll;">
 <code>
 Now analyzing the emotion from Joe Biden
 cnn
