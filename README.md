@@ -190,12 +190,13 @@ where
 <li>$\text{P}(P = n | F \neq n, D_n=1)$: Probability that the actual name is not $n$, but predict $n$. Use the $\frac{1}{9905}$probability of arbitrary choice as estimation. </li>
 <li>$\text{P}(F = n|D_n=1)$: The frequency of that name $n$ appearing in the image dataset.</li>  
 </ul>
-Then we get 
-| $\text{P}(F = n|D_n=1)$ | $\text{P}(P = n | F = n, D_n=1)$ |
-|-------------------------|----------------------------------|
-| 0.01                    | 0.989                            |
-|0.001                    | 0.904                            |
-| 0.0001                  | 0.485                            |
+Here are some pairs:
+| $\text{P}(F = n|D_n=1)$ | $\text{P}(P = n | F = n, D_n=1)$ | 
+|------------------------|----------------------------------| 
+| 0.01                   | 0.989                            |
+| 0.001                  | 0.904                            |
+| 0.0001                 | 0.485                            |
+
 
 
 
