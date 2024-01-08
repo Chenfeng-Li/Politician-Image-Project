@@ -174,8 +174,7 @@ Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["w
 
 
 ## Result
-<div style="width: 100%; height: 30%; overflow: scroll;">
-<code>
+```
 Now analyzing the emotion from Joe Biden
 cnn
 Number of Samples: 2000
@@ -564,8 +563,7 @@ Number of Samples: 773
 Average emotion: [0.0164, 0.0034, 0.0859, 0.0943, 0.0624, 0.6814, 0.0561]
 Dominate Emotion: Surprise
 Prediction Accuracy of KNN classification: 0.4648910411622276
-</code>
-</div>
+```
 
 
 
