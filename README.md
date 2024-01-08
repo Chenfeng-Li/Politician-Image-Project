@@ -175,7 +175,7 @@ Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["w
 ### Theoretical Accuracy of identity recognition through KNN model:
 #### Case 1: Without usage of prompt:
 
-For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $D_n \in \{0,1\}$ stands for whether or not the name is included in the model. 
+For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $D_n \in {0,1}$ stands for whether or not the name is included in the model. 
 We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.\n
 
 According to the Bayesian Theorem:
