@@ -29,6 +29,12 @@ $ python analyze_image_dataset.py
 Rename the columns. Delete lines with no URLs, invalid URLs, or duplicates.<br>
 Determine the source corporation of each row by analyzing the URLs. Remove the rows from invalid or non-media corporation.
 
+We determine the source corporation of a sample by the second-level domain of url. \
+e.g. ht<span></span>tps://static.__politico__.com/c3/6e/45e01ef84890a8cf62801cfae41d/160504-ted-cruz-1-gty-1160.jpg \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     https://**dailycaller**.com/wp-content/uploads/2018/07/Michael-Ian-Black-Twitter-4.jpg
+
+
+
 After processing, the sample size of dataset is **952705**, where the number of samples from each corporation is:
 | Corporation     | Sample Size |
 |-----------------|-------------|
@@ -123,7 +129,7 @@ $ python test_url.py
 
 Input:
 ```
-https://www.politico.com/dims4/default/210ea62/2147483647/strip/true/crop/700x400+0+0/resize/630x360!/quality/90/?url=https%3A%2F%2Fstatic.politico.com%2Fcapny%2Fsites%2Fdefault%2Ffiles%2Fa-Kirsten%20Gillibrand-Chuck%20Schumer_0.png
+>>> https://www.politico.com/dims4/default/210ea62/2147483647/strip/true/crop/700x400+0+0/resize/630x360!/quality/90/?url=https%3A%2F%2Fstatic.politico.com%2Fcapny%2Fsites%2Fdefault%2Ffiles%2Fa-Kirsten%20Gillibrand-Chuck%20Schumer_0.png
 ```
 
 Output:
@@ -141,11 +147,11 @@ which are exactly the names of the two politicians.
 
 Input:
 ```
-https://media.cnn.com/api/v1/images/stellar/prod/200505150639-02-coronavirus-task-force-briefing-0325.jpg?q=x_0,y_156,h_1688,w_3000,c_crop/w_800
+>>> https://media.cnn.com/api/v1/images/stellar/prod/200505150639-02-coronavirus-task-force-briefing-0325.jpg?q=x_0,y_156,h_1688,w_3000,c_crop/w_800
 ```
 Output:
 ```
-Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven Mnuchin'} in the image.
+>>> Recognized {'Vicki Marble', 'Donald Trump', 'Mike Pence', 'Mike Gravel', 'Steven Mnuchin'} in the image.
 ```
 Notice that 'Donald Trump', 'Mike Pence', 'Steven Mnuchin' are correctly predicted, while the other two failed, as they are not included in the dataset.
 
@@ -176,14 +182,14 @@ Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["w
 #### Case 1: Without the usage of prompt:
 
 For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $`D_n \in \{0,1\}`$ stands for whether or not the name is included in the model. 
-We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.\n
+We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.
 
 According to the Bayesian Theorem:
 
 $$ 
 \begin{align}
 P(F = n | P = n) &= P(F = n | P = n, D_n=1) \\
-&= \frac{P(P = n | F = n, D_n=1)  P(F = n｜D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)}
+&= \frac{P(P = n | F = n, D_n=1)  P(F = n|D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)}
 \end{align}
 $$
 
@@ -195,23 +201,73 @@ where
 </ul>
 Here are some pairs:
 
-| $P(F=n\|D_n=1)$ | $P(P=n\|F=n)$ |
+| $P(F=n\|D_n=1)$ | $P(F=n\|P=n)$ |
 |-----------------|---------------|
 | 0.01            | 0.989         |
 | 0.001           | 0.904         |
 | 0.0001          | 0.485         |
 
-
-#### Case 1: With the usage of prompts:
-Let $T$ stands for the prompts, and this time we are interesting in $P(F = n | P = n, T)$
+That is, for the politicians who don't make the news much, we have a high chance of mistaken prediction.
 
 
+#### Case 2: With the usage of prompts:
+Let $T_n$ stands for the prompts corresponding to person $n$, and in this case we are interesting in $P(F = n | P = n, T_n)$.
+
+Notice that conditional on the true name $F$, the prediction $P$ and the prompt $T$ are independent.
+
+$$ 
+\begin{align}
+P(F = n | P = n, T_n) &= P(F = n | P = n, T_n, D_n=1) \\
+&= \frac{P(P = n | F = n, T_n, D_n=1)  P(F = n|T_n, D_n=1)}{P(P = n | F = n,T_n, D_n=1)  P(F = n|T_n, D_n=1) + P(P = n | F \neq n,T_n, D_n=1) P(F \neq n|T_n, D_n=1)}\\
+&= \frac{P(P = n | F = n, D_n=1)  P(F = n|T_n, D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|T_n, D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|T_n, D_n=1)}
+\end{align}
+$$
+
+where
+
+$P(F = n|T_n, D_n=1)$: The probability of the appearance of $n$ given the corresponding prompts of $n$.
+
+Empirically, this is much larger than the $P(F = n|D_n=1)$.
+
+With the usage of prompts, we still need to analyze the "famous" people in the dataset, because:
+<ul>
+  <li> With the restriction of prompts $T_n$, the number of samples is even lower for non-famous people.</li>
+  <li> As $P(F = n|T_n, D_n=1) \propto P(T_n|F=n, D_n=1) P(F=n|D_n=1)$, the frequency $P(F=n|D_n=1)$ could not be too small.</li>
+</ul>
 
 
 
+
+
+## Evaluation
+To get the emotion logits of some specific person, we need to execute
+```
+$ python name_emotion.py
+```
+Input the exact names of a person (should be included in `name_embd.pt`).\
+Notice that some person may have multiple exact names, e.g. "Hillary Clinton" and "Hillary Rodham Clinton". That's because the difference of title between Wikipedia and Wikimedia. In this case, we need to enter all "exact name":
+```
+>>> Hillary Clinton
+>>> Hillary Rodham Clinton
+>>>
+```
+Then input the prompts (parts of name is effective)
+```
+>>> Clinton
+>>> Hillary
+```
+
+Finally, input the maximum number of samples we grabbed from each corporation. 2,000 by default.
+
+
+Based on the usage of prompts, we tested the name of some famous people, namely [Joe Biden, Donald Trump
 
 
 ## Result
+I tested some famious politicians and businesspeople.
+
+
+
 ```
 Now analyzing the emotion from Joe Biden
 cnn
