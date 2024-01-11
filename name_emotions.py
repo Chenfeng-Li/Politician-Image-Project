@@ -39,11 +39,11 @@ def name_cor_filter(row, prompts, cors):
                 return True
 
             for prompt in prompts:
-                if type(row['Title']) == str and prompt in row['Title']:
+                if type(row['Title']) == str and prompt.lower() in row['Title'].lower():
                     return True
-                if type(row['Caption']) == str and prompt in row['Caption']:
+                if type(row['Caption']) == str and prompt.lower() in row['Caption'].lower():
                     return True
-                if type(row['Text']) == str and prompt in row['Text']:
+                if type(row['Text']) == str and prompt.lower() in row['Text'].lower():
                     return True
     return False
 
