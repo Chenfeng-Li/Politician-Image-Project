@@ -167,41 +167,62 @@ For a face image, this model returns a logit vector of length 7, stands for <cod
 
 
 
-## Obtained identity and expression data from the Image Dataset with prompts.
+## Obtain expression data from the Image Dataset with prompts.
+To get the emotion logits of some specific person, we need to execute
 ```
 $ python name_emotion.py
 ```
-Enter the exact name of a person we are interesting in (e.g. "Donald Trump"), the prompts (e.g. "Trump"), and the maximum number of values to get for each media corporationing.
+Input the exact names of a person (should be included in `name_embd.pt`).\
+Notice that some person may have multiple exact names, e.g. "Hillary Clinton" and "Hillary Rodham Clinton". That's because of the different titles between Wikipedia and Wikimedia. In this case, we need to enter all "exact names":
+```
+>>> Hillary Clinton
+>>> Hillary Rodham Clinton
+>>>
+```
+Then input the prompts (parts of name is an intuitive choice)
+```
+>>> Clinton
+>>> Hillary
+>>>
+```
 
-This program filter out the samples whose texts (Title, Caption or Text) don't contain these prompts. 
+Finally, input the maximum number of samples we grabbed from each corporation. 2,000 by default.
+```
+>>>
+```
 
-Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["washtimes", "washingtontimes"], ["dailycaller"],["politico", "politicopro"], ["breitbart"], ["npr"], ['apnews']]</code>, with the facial recognition model <code>model.sav</code>, for each sample, the program determines whether or not the person is in the photos. If so, passing the square-cropped face to the emotion model, and get the logit vector. Store the result in <code>politician_emotions_corporation.pt</code>.
+This program analyzes the samples whose texts (Title, Caption or Text) contain these prompts. 
+
+Then for each of the corporation <code>[["foxnews", "foxbusiness"], ["cnn"], ["washtimes", "washingtontimes"], ["dailycaller"],["politico", "politicopro"], ["breitbart"], ["npr"], ['apnews']]</code>, for each filtered sample, the program determines whether or not the person is in the photos with the KNN-model <code>model.sav</code>. and if so, passing the square-cropped face to the emotion recognition model <code>RMN</code>, and get the logit vector. 
+
+Store the results in <code>politician_emotions_corporation.pt</code>.
 
 
 ### Theoretical Accuracy of identity recognition through KNN model:
 #### Case 1: Without the usage of prompt:
 
-For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $`D_n \in \{0,1\}`$ stands for whether or not the name is included in the model. 
+For a face image, let $F$ be the actual name of this face, $P$ be the predicted name from the KNN model, $`D_n`$ stands for "the name is included in the KNN model". 
 We are interested in $P(F = n | P = n)$, that is, the conditional probability of a name is actual given it is predicted from the model.
 
 According to the Bayesian Theorem:
 
 $$ 
 \begin{align}
-P(F = n | P = n) &= P(F = n | P = n, D_n=1) \\
-&= \frac{P(P = n | F = n, D_n=1)  P(F = n|D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|D_n=1)}
+&P(F = n | P = n) \\
+&= P(F = n | P = n, D_n) \\
+&= \frac{P(P = n | F = n, D_n)  P(F = n|D_n)}{P(P = n | F = n, D_n)  P(F = n|D_n) + P(P = n | F \neq n, D_n) P(F \neq n|D_n)}
 \end{align}
 $$
 
 where
 <ul>
-<li>$P(P = n | F = n, D_n=1)$: The prediction accuracy of the model. Estimated 0.95.  </li>
-<li>$P(P = n | F \neq n, D_n=1)$: Probability that the actual name is not $n$, but predict $n$. Use the $\frac{1}{9905}$ (probability of arbitrary choice) as estimation. </li>
-<li>$P(F = n|D_n=1)$: The frequency of that name $n$ appearing in the image dataset.</li>  
+<li>$P(P = n | F = n, D_n)$: The prediction accuracy of the model. Estimated 0.95.  </li>
+<li>$P(P = n | F \neq n, D_n)$: Probability that the actual name is not $n$, but predict $n$. Use the $\frac{1}{9905}$ (probability of arbitrary choice) as estimation. </li>
+<li>$P(F = n|D_n)$: The frequency of that name $n$ appearing in the image dataset.</li>  
 </ul>
 Here are some pairs:
 
-| $P(F=n\|D_n=1)$ | $P(F=n\|P=n)$ |
+| $P(F=n\|D_n)$ | $P(F=n\|P=n)$ |
 |-----------------|---------------|
 | 0.01            | 0.989         |
 | 0.001           | 0.904         |
@@ -217,15 +238,16 @@ Notice that conditional on the true name $F$, the prediction $P$ and the prompt 
 
 $$ 
 \begin{align}
-P(F = n | P = n, T_n) &= P(F = n | P = n, T_n, D_n=1) \\
-&= \frac{P(P = n | F = n, T_n, D_n=1)  P(F = n|T_n, D_n=1)}{P(P = n | F = n,T_n, D_n=1)  P(F = n|T_n, D_n=1) + P(P = n | F \neq n,T_n, D_n=1) P(F \neq n|T_n, D_n=1)}\\
-&= \frac{P(P = n | F = n, D_n=1)  P(F = n|T_n, D_n=1)}{P(P = n | F = n, D_n=1)  P(F = n|T_n, D_n=1) + P(P = n | F \neq n, D_n=1) P(F \neq n|T_n, D_n=1)}
+&P(F = n | P = n, T_n) \\
+&= P(F = n | P = n, T_n, D_n) \\
+&= \frac{P(P = n | F = n, T_n, D_n)  P(F = n|T_n, D_n)}{P(P = n | F = n,T_n, D_n)  P(F = n|T_n, D_n) + P(P = n | F \neq n,T_n, D_n) P(F \neq n|T_n, D_n)}\\
+&= \frac{P(P = n | F = n, D_n)  P(F = n|T_n, D_n)}{P(P = n | F = n, D_n)  P(F = n|T_n, D_n) + P(P = n | F \neq n, D_n) P(F \neq n|T_n, D_n)}
 \end{align}
 $$
 
 where
 
-$P(F = n|T_n, D_n=1)$: The probability of the appearance of $n$ given the corresponding prompts of $n$.
+$P(F = n|T_n, D_n)$: The probability of the appearance of $n$ given the corresponding prompts of $n$.
 
 Empirically, this is much larger than the $P(F = n|D_n=1)$.
 
@@ -236,36 +258,16 @@ With the usage of prompts, we still need to analyze the "famous" people in the d
 </ul>
 
 
+## Evaluation and Result
+We tested some famious politicians and businesspeople. Namely <code>['Joe Biden', 'Donald Trump', 'Barack Obama', 'Hillary Clinton', 'Kevin McCarthy', 'Kamala Harris', 'Elon Musk', 'Mike Pence', 'Jeff Bezos', 'Bill Gates', 'Nancy Pelosi']</code>
 
+For each person, we have a dataset of emotion logits with eight media corporations as labels. 
 
+Then we implement a KNN classifier with k=5 and test the prediction accuracy, and compare with the baseline model (random guessing or naive majority prediction).
 
-## Evaluation
-To get the emotion logits of some specific person, we need to execute
 ```
-$ python name_emotion.py
+$ python evaluate_name_emotions.py
 ```
-Input the exact names of a person (should be included in `name_embd.pt`).\
-Notice that some person may have multiple exact names, e.g. "Hillary Clinton" and "Hillary Rodham Clinton". That's because the difference of title between Wikipedia and Wikimedia. In this case, we need to enter all "exact name":
-```
->>> Hillary Clinton
->>> Hillary Rodham Clinton
->>>
-```
-Then input the prompts (parts of name is effective)
-```
->>> Clinton
->>> Hillary
-```
-
-Finally, input the maximum number of samples we grabbed from each corporation. 2,000 by default.
-
-
-Based on the usage of prompts, we tested the name of some famous people, namely [Joe Biden, Donald Trump
-
-
-## Result
-I tested some famious politicians and businesspeople.
-
 
 
 ```
@@ -659,6 +661,23 @@ Dominate Emotion: Surprise
 Prediction Accuracy of KNN classification: 0.4648910411622276
 ```
 
+According to the results, we found that for a specific famous politician, different media corporation may tends to use the different emotions.
 
-
+## Problems and possible improvements
+<ol>
+  <li>  There are lots of duplicated data.
+  <ul>  
+   <li> Duplicated on Image URL only: The media have a photo gallary, and may use same photos for different articles. </li>  
+   <li> Duplicated on Image URL and Texts (Title, Caption and Text), but different UUID: This may because of the republishment of articles, or may because of repeated collection of data. <br>
+     (We may remove duplicates in the latter case.)</li>
+  <li> Duplicated on Image URL, Texts and UUID: Remove duplicates.</li>
+  </ul>
+  </li>
+  <li> Analyze logits or probabilities. <br>
+     Now we classify the emotion logits. Another choice is to apply softmax function to convert the logits to probabilities.<br>
+     The logits have larger scales, but the probabilities is more intuitive. Moreover, different logits may have same probabilities.
+  </li>
+  <li> Media Corporations with similar politics bias may have similar strategies to use photos with different emotions. <br>
+    In this case, we may categories the media by politics bias.</li>
+</ol>
 
