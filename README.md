@@ -249,12 +249,12 @@ where
 
 $P(F = n|T_n, D_n)$: The probability of the appearance of $n$ given the corresponding prompts of $n$.
 
-Empirically, this is much larger than the $P(F = n|D_n=1)$.
+Empirically, this is much larger than the $P(F = n|D_n)$.
 
 With the usage of prompts, we still need to analyze the "famous" people in the dataset, because:
 <ul>
   <li> With the restriction of prompts $T_n$, the number of samples is even lower for non-famous people.</li>
-  <li> As $P(F = n|T_n, D_n=1) \propto P(T_n|F=n, D_n=1) P(F=n|D_n=1)$, the frequency $P(F=n|D_n=1)$ could not be too small.</li>
+  <li> As $P(F = n|T_n, D_n) \propto P(T_n|F=n, D_n) P(F=n|D_n)$, the frequency $P(F=n|D_n)$ could not be too small.</li>
 </ul>
 
 
