@@ -1,1 +1,0 @@
-Reference: https://github.com/WuJie1010/Facial-Expression-Recognition.Pytorch
