@@ -677,6 +677,7 @@ According to the results, we found that for a specific famous politician, differ
      Now we classify the emotion logits. Another choice is to apply softmax function to convert the logits to probabilities.<br>
      The logits have larger scales, but the probabilities is more intuitive. Moreover, different logits may have same probabilities.
   </li>
+  <li> For each person, using Statistical method (<a href="https://online.stat.psu.edu/stat505/lesson/7/7.2/7.2.7">Hotelling's T-square test</a>) to determine whether or not $\mu_i = \mu_j$ for different corporation</li>. But may violate assumptions (independent, normally distributed)
   <li> Media Corporations with similar politics bias may have similar strategies to use photos with different emotions. <br>
     In this case, we may categories the media by politics bias.</li>
 </ol>
