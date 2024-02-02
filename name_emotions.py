@@ -88,7 +88,7 @@ def name_from_img(img, name):
         # Suppose an images contains at most one face of a specific person
         for n in name:
             if n == names[target]:
-                return box
+                return (box, face_embd[0])
 
     return False
 
@@ -188,6 +188,7 @@ def name_emotion(name, mask, max_num=None):
                            If None, pass all photos.
     """
     emotions = []
+    face_embd = []
     URLs = [] 
 
     if max_num is None:
@@ -199,10 +200,12 @@ def name_emotion(name, mask, max_num=None):
                 if img.mode == "P":
                     img = img.convert("RGBA")
                 img = img.convert("RGB")
-                crop = name_from_img(img, name=name)
-                if crop is not False:
+                crop_embd = name_from_img(img, name=name)
+                if crop_embd is not False:
+                    crop, embd = crop_embd
                     crop = extend_to_square(crop, extend_limit(img))
                     emotions.append(emotion_embd(img, crop))
+                    face_embd.append(embd)
                     URLs.append(row["URL"])
             except:
                 continue
@@ -223,16 +226,18 @@ def name_emotion(name, mask, max_num=None):
                     if img.mode == "P":
                         img = img.convert("RGBA")
                     img = img.convert("RGB")
-                    crop = name_from_img(img, name=name)
-                    if crop is not False:
+                    crop_embd = name_from_img(img, name=name)
+                    if crop_embd is not False:
+                        crop, embd = crop_embd
                         crop = extend_to_square(crop, extend_limit(img))
                         emotions.append(emotion_embd(img, crop))
+                        face_embd.append(embd)
                         URLs.append(row["URL"])
                         break
                 except:
                     continue
         
-    return emotions, URLs
+    return emotions, face_embd, URLs
 
 
 
@@ -307,13 +312,15 @@ if __name__ == "__main__":
             print(f"{cor} already analyzed, {len(politician_emotion[exact_names[0]][1])} samples in total.")
         except:
             name_cor_mask = df.apply(name_cor_filter, axis=1, args=(prompts, cor))
-            emotions_list, URLs = name_emotion(exact_names, name_cor_mask, max_num=max_num)
+            emotions_list, face_embd_list, URLs = name_emotion(exact_names, name_cor_mask, max_num=max_num)
             try:
                 emotions = torch.stack(emotions_list)
+                face_embds = torch.stack(face_embd_list)
             except:
                 # emotions_list is empty
                 emotions = torch.empty((0,7))
-            politician_emotion[exact_names[0]][cor[0]] = (emotions, URLs)
+                face_embds = torch.empty((0,8631))
+            politician_emotion[exact_names[0]][cor[0]] = (emotions, face_embds, URLs)
             print(f"{len(URLs)} samples in total.")
             torch.save(politician_emotion, "politician_emotions_corporation.pt")
     

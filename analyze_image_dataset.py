@@ -87,7 +87,7 @@ if __name__ == "__main__":
     df = df[df["URL"].apply(valid_url)]
 
     # Drop rows with duplicate URL
-    df = df.drop_duplicates()
+    df = df.drop_duplicates(subset=["Title", "URL", "Caption", "Text"])
 
     print(f"Shape of Dataset: {df.shape}\n")
 
