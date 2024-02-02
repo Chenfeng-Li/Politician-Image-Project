@@ -5,7 +5,7 @@ Build up models to recognize the politicians in images from news websites.
 
 ### Install Packages
 ```
-pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch rmn torchvision scikit-learn pickle-mixin tqdm
+pip install numpy matplotlib pandas torch Pillow requests beautifulsoup4 facenet_pytorch rmn torchvision scikit-learn pickle-mixin umap tqdm
 ```
   
 where 
@@ -15,6 +15,7 @@ where
   <li><code>request beautifulsoup4</code>: Extract content (links, texts, images) from website. </li>
   <li><code>scikit-learn</code>: K Nearest Neighbour classifier.</li>
   <li><code>pickle-mixin</code>: Save sklearn model.</li>
+  <li><code>umap</code>: Reduce dimension of vector..</li>
   </ul>
 
 
@@ -483,7 +484,8 @@ For Donald Trump, the accuracy is 0.604. (In contrast, the accuracy of random gu
 
 
 ## Reduce dimension of face-embedding-vectors and emotion-logits
-Using UMAP 
+Using UMAP. \
+I've also tried t-SNE, and the results are similar.
 
 ### Q1: Whether the embedding vectors of faces distinguish each politicians?
 <p align="center">
