@@ -499,18 +499,22 @@ That is, if a specific politician has similar expressions.
 </p>
 
 
+### Q3: Whether the emotion logits distinguish emotion label?
+Note that the relationship between label and logits are 
+
+$$
+Label = argmax_i (logit_i)
+$$
 ## Q3: Whether the emotion logits distinguish emotion label?
 Note that the relationship between label and logits are 
 
 $$
 Label = argmax_i (logit_i)
 $$
-<p align="center">
-  <img src="assets/logit_label_Biden.png" alt="logit_label_Biden.png" width="48%">
-  <img src="assets/logit_label_Trump.png" alt="logit_label_Trump.png" width="48%">
-</p>
 
-## Q4: Whether the emotion probabilities distinguish emotion label?
+
+
+### Q4: Whether the emotion probabilities distinguish emotion label?
 
 
 $$
