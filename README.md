@@ -499,12 +499,6 @@ That is, if a specific politician has similar expressions.
 </p>
 
 
-### Q3: Whether the emotion logits distinguish emotion label?
-Note that the relationship between label and logits are 
-
-$$
-Label = argmax_i (logit_i)
-$$
 ## Q3: Whether the emotion logits distinguish emotion label?
 Note that the relationship between label and logits are 
 
@@ -512,26 +506,54 @@ $$
 Label = argmax_i (logit_i)
 $$
 
-
+<p align="center">
+  <img src="assets/temp/logit_label_Biden.png" alt="logit_label_Biden.png" width="48%">
+  <img src="assets/temp/logit_label_Trump.png" alt="logit_label_Trump.png" width="48%">
+</p>
 
 ### Q4: Whether the emotion probabilities distinguish emotion label?
 
 
 $$
-prob = softmax(logit) \\
+prob = softmax(logit) 
+$$
+
+$$
 Label = argmax_i (prob_i)
 $$
+
 <p align="center">
   <img src="assets/prob_label_Biden.png" alt="prob_label_Biden.png" width="48%">
   <img src="assets/prob_label_Trump.png" alt="prob_label_Trump.png" width="48%">
 </p>
 
+## Q5: For a specific politician, whether the emotion logits can be used to distinguish the media corporations?
+<p align="center">
+  <img src="assets/logit_cor_full_Biden.png" alt="logit_cor_full_Biden.png" width="48%">
+  <img src="assets/logit_cor_full_Trump.png" alt="logit_cor_full_Trump.png.png" width="48%">
+</p>
 
+## Q6: For a specific politician, whether the emotion logits can be used to distinguish the political bias?
+<p align="center">
+  <img src="assets/logit_cor_binary_Biden.png" alt="logit_cor_binary_Biden.png" width="48%">
+  <img src="assets/logit_cor_binary_Trump.png" alt="logit_cor_binary_Trump.png.png" width="48%">
+</p>
 
+## Q7: For a specific politician, whether the emotion probabilities can be used to distinguish the media corporation?
+<p align="center">
+  <img src="assets/prob_cor_full_Biden.png" alt="prob_cor_full_Biden.png" width="48%">
+  <img src="assets/prob_cor_full_Trump.png" alt="prob_cor_full_Trump.png.png" width="48%">
+</p>
+
+## Q8: For a specific politician, whether the emotion probabilities can be used to distinguish the political bias?
+<p align="center">
+  <img src="assets/prob_cor_binary_Biden.png" alt="prob_cor_full_Biden.png" width="48%">
+  <img src="assets/prob_cor_binary_Trump.png" alt="prob_cor_full_Trump.png.png" width="48%">
+</p>
 
 ## Problems and possible improvements
 <ol>
-  <li>  There are lots of duplicated data.
+  <li> There are lots of duplicated data.
   <ul>  
    <li> Duplicated on Image URL only: The media have a photo gallary, and may use same photos for different articles. </li>  
    <li> Duplicated on Image URL and Texts (Title, Caption and Text), but different UUID: This may because of the republishment of articles, or may because of repeated collection of data. <br>
@@ -546,5 +568,6 @@ $$
   <li> For each person, using Statistical method (<a href="https://online.stat.psu.edu/stat505/lesson/7/7.2/7.2.7">Hotelling's T-square test</a>) to determine whether or not $\mu_i = \mu_j$ for different corporations. But may violate assumptions (independent, normally distributed) </li>
   <li> Media Corporations with similar politics bias may have similar strategies to use photos with different emotions. <br>
     In this case, we may categories the media by politics bias.</li>
+  <li> [Ideal Point](https://arxiv.org/pdf/2005.04232.pdf)https://arxiv.org/pdf/2005.04232.pdf.</li>
 </ol>
 
