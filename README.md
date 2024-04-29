@@ -1,7 +1,7 @@
 # Politician Image Project
 Build up models to recognize the politicians in images from news websites.
 
-<img src="assets/explanation.jpg">
+<img src="assets/thesis.jpg">
 
 ### Install Packages
 ```
