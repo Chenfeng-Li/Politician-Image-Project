@@ -1,2 +1,2 @@
 *.ipynb linguist-detectable=false
-paper linguist-vendored=false
+*.tex linguist-detectable=false
