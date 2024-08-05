@@ -1,2 +1,2 @@
-*.ipynb linguist-detectable=false
-*.tex linguist-detectable=false
+*.ipynb linguist-vendored
+*.tex linguist-vendored
