@@ -1,2 +1,2 @@
-*.tex linguist-vendored
+thesis_paper_latex/*.tex linguist-vendored
 *.ipynb linguist-vendored
